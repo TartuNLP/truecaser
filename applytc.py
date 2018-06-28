@@ -9,14 +9,19 @@ class DefUniqDict(dict):
 	def __missing__(self, key):
 		return key
 
-def loadModel(filename):
+class WordFreqTuple():
+	def __init__(self, word, freq):
+		self.word = word
+		self.freq = freq
+
+def loadModel(filename, freqs = False):
 	res = DefUniqDict()
 	
 	with open(filename, 'r') as filehandle:
 		for w in filehandle:
-			w = w.strip()
+			w, f = w.strip().split()
 			
-			res[w.lower()] = w
+			res[w.lower()] = WordFreqTuple(w, f)
 		
 		return res
 
@@ -24,7 +29,7 @@ def isUpper(w):
 	return re.search(r'[A-Z]', w) and not re.search(r'[a-z]', w)
 
 def truecase(model, wordlist):
-	return [model[w.lower()] if (i == 0 or isUpper(w) or wordlist[i-1] in ".:;") else w for i, w in enumerate(wordlist)]
+	return [model[w.lower()].word if (w.lower() in model and (i == 0 or isUpper(w) or wordlist[i-1] in ".:;")) else w for i, w in enumerate(wordlist)]
 
 def processLines(model, fh):
 	logFreq = 100000

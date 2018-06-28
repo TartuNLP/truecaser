@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import re
 
 from collections import defaultdict
 from operator import itemgetter
@@ -31,26 +32,26 @@ def learnModel(lines):
 
 def compressModel(rawmodel):
 	log("compressing")
-	model = list()
+	model = dict()
 	
 	for key in rawmodel:
 		sortedItems = sorted(rawmodel[key].items(), key=itemgetter(1), reverse=True)
 		totFreq = sum(rawmodel[key].values())
 		
-		if totFreq > 1:
+		if totFreq > 1 and re.search(r'[a-z]', key):
 			if (len(sortedItems) > 1 and sortedItems[0][1] == sortedItems[1][1]):
 				winner = max(sortedItems[0][0], sortedItems[1][0])
 			else:
 				winner = sortedItems[0][0]
-			model.append(winner)
+			#model.append(winner)
+			model[winner] = rawmodel[key][winner]
 	
 	return model
 
 def saveModel(model, fh):
 	log("saving")
-	for w in model:
-		fh.write(w)
-		fh.write("\n")
+	for w, f in model.items():
+		fh.write("{0}\t{1}\n".format(w, f))
 	
 if __name__ == '__main__':
 	try:
