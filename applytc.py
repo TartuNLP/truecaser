@@ -3,7 +3,7 @@
 import sys
 import re
 
-from learntc import log
+from learntc import log, tokens
 
 class DefUniqDict(dict):
 	def __missing__(self, key):
@@ -29,15 +29,24 @@ def isUpper(w):
 	return re.search(r'[A-Z]', w) and not re.search(r'[a-z]', w)
 
 def truecase(model, wordlist):
-	return [model[w.lower()].word if (w.lower() in model and (i == 0 or isUpper(w) or wordlist[i-1] in ".:;")) else w for i, w in enumerate(wordlist)]
+	return [model[w.lower()].word if (w.lower() in model and (i == 0 or isUpper(w) or wordlist[i-1] in ".:;?!")) else w for i, w in enumerate(wordlist)]
+
+def updateToken(line, span, newtoken):
+	return line[:span[0]] + newtoken + line[span[1]:]
 
 def processLines(model, fh):
 	logFreq = 100000
 	i = 0
 	for line in fh:
-		words = line.strip().split()
+		words, spans = zip(*tokens(line))
 		
-		print(" ".join(truecase(model, words)))
+		tcwords = truecase(model, words)
+		
+		resline = line.strip()
+		for w, s in zip(tcwords, spans):
+			resline = updateToken(resline, s, w)
+		
+		print(resline)
 		
 		i += 1
 		if not i % logFreq:
