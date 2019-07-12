@@ -10,6 +10,10 @@ from datetime import datetime
 def log(msg):
 	sys.stderr.write("{0}: {1}\n".format(str(datetime.now()), msg))
 
+def tokens(line):
+	for m in re.finditer(r'\b[^ ]+\b', line.strip()):
+		yield m.group(0), m.span()
+
 def learnModel(lines):
 	log("learning")
 	rawmodel = defaultdict(lambda: defaultdict(int))
@@ -17,9 +21,9 @@ def learnModel(lines):
 	logFreq = 100000
 	i = 0
 	for line in lines:
-		words = line.strip().split()
+		#for words = gettoks(line)
 		
-		for word in words:
+		for word, _ in tokens(line):
 			rawmodel[word.lower()][word] += 1
 		
 		i += 1
