@@ -1,5 +1,5 @@
 # truecaser
-Simple truecaser that processes sentence-first and all-uppercase words
+Simple truecaser that processes sentence-first and all-uppercase words using a unigram probabilistic approach
 
 ## Train a model:
 ```learntc.py textfile modelfile```
