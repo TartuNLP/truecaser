@@ -38,20 +38,25 @@ def processLines(model, fh):
 	logFreq = 100000
 	i = 0
 	for line in fh:
-		words, spans = zip(*tokens(line))
-		
-		tcwords = truecase(model, words)
-		
+		tokenspans = zip(*tokens(line))
 		resline = line.strip()
-		for w, s in zip(tcwords, spans):
-			resline = updateToken(resline, s, w)
-		
+
+		try:
+			words, spans = tokenspans
+
+			tcwords = truecase(model, words)
+
+			for w, s in zip(tcwords, spans):
+				resline = updateToken(resline, s, w)
+		except ValueError:
+			pass
+
 		print(resline)
-		
+
 		i += 1
 		if not i % logFreq:
 			log("processed {0} lines".format(i))
-	
+
 	if i % logFreq:
 		log("processed {0} lines".format(i))
 
