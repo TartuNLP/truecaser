@@ -3,7 +3,7 @@
 import sys
 import re
 
-from learntc import log, tokens
+from .learntc import log, tokens
 
 class DefUniqDict(dict):
 	def __missing__(self, key):
@@ -16,13 +16,13 @@ class WordFreqTuple():
 
 def loadModel(filename, freqs = False):
 	res = DefUniqDict()
-	
+
 	with open(filename, 'r') as filehandle:
 		for w in filehandle:
 			w, f = w.strip().split('\t')
-			
+
 			res[w.lower()] = WordFreqTuple(w, int(f))
-		
+
 		return res
 
 def isUpper(w):
@@ -62,14 +62,14 @@ def processLines(model, fh):
 
 if __name__ == '__main__':
 	modelfile = sys.argv[1]
-	
+
 	model = loadModel(modelfile)
-	
+
 	try:
 		filename = sys.argv[2]
 	except IndexError:
 		filename = '-'
-	
+
 	if filename == '-':
 		processLines(model, sys.stdin)
 	else:
