@@ -21,7 +21,7 @@ def loadModel(filename, freqs = False):
 		for w in filehandle:
 			w, f = w.strip().split('\t')
 
-			res[w.lower()] = WordFreqTuple(w, int(f))
+			res[w.lower()] = WordFreqTuple(w, float(f))
 
 		return res
 
