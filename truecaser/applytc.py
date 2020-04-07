@@ -33,6 +33,23 @@ def truecase(model, wordlist):
 
 def updateToken(line, span, newtoken):
 	return line[:span[0]] + newtoken + line[span[1]:]
+	
+'''
+  File "/opt/nazgul/translator.py", line 17, in _preprocess
+    truecased_sentence = applytc.processLine(models.truecaser, sentence)
+AttributeError: module 'truecaser.applytc' has no attribute 'processLine'
+'''
+def processLine(model, line):
+		tokenspans = zip(*tokens(line))
+		resline = line.strip()
+		try:
+			words, spans = tokenspans
+			tcwords = truecase(model, words)
+			for w, s in zip(tcwords, spans):
+				resline = updateToken(resline, s, w)
+		except ValueError:
+			pass
+		return resline
 
 def processLines(model, fh):
 	logFreq = 100000
