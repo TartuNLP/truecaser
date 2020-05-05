@@ -3,7 +3,7 @@
 import sys
 import re
 
-from learntc import log, tokens
+from truecaser.learntc import log, tokens
 
 class DefUniqDict(dict):
 	def __missing__(self, key):
