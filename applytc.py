@@ -18,8 +18,14 @@ def loadModel(filename, freqs = False):
 	res = DefUniqDict()
 	
 	with open(filename, 'r') as filehandle:
-		for w in filehandle:
-			w, f = w.strip().split('\t')
+		for l in filehandle:
+			try:
+				w, f = l.strip().split('\t')
+			except:
+				#sys.stderr.write(l)
+				#raise e
+				w = l.strip()
+				f = 5
 			
 			res[w.lower()] = WordFreqTuple(w, int(f))
 		
@@ -34,24 +40,33 @@ def truecase(model, wordlist):
 def updateToken(line, span, newtoken):
 	return line[:span[0]] + newtoken + line[span[1]:]
 
+def processLine(model, line):
+	try:
+		toks = tokens(line)
+		words, spans = zip(*toks)
+
+		tcwords = truecase(model, words)
+
+		resline = line
+
+		for w, s in zip(tcwords, spans):
+			resline = updateToken(resline, s, w)
+
+		return resline
+	except:
+		return line
+
 def processLines(model, fh):
 	logFreq = 100000
 	i = 0
+
 	for line in fh:
-		tokenspans = zip(*tokens(line))
-		resline = line.strip()
-
 		try:
-			words, spans = tokenspans
-
-			tcwords = truecase(model, words)
-
-			for w, s in zip(tcwords, spans):
-				resline = updateToken(resline, s, w)
-		except ValueError:
+			print(processLine(model, line.strip()))
+		except ValueError as e:
+			sys.stderr.write("empty\n")
+			print("")
 			pass
-
-		print(resline)
 
 		i += 1
 		if not i % logFreq:
