@@ -11,7 +11,7 @@ def log(msg):
 	sys.stderr.write("{0}: {1}\n".format(str(datetime.now()), msg))
 
 def tokens(line):
-	for m in re.finditer(r'\b[^ ]+\b', line.strip()):
+	for m in re.finditer(r'\b\S+\b', line.strip()):
 		yield m.group(0), m.span()
 
 def learnModel(lines):
