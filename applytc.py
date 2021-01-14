@@ -2,6 +2,7 @@
 
 import sys
 import re
+import regex
 
 from truecaser.learntc import log, tokens
 
@@ -32,7 +33,7 @@ def loadModel(filename, freqs = False):
 		return res
 
 def isUpper(w):
-	return re.search(r'[A-Z]', w) and not re.search(r'[a-z]', w)
+	return regex.search(r'[[:upper:]]', w) and not regex.search(r'[[:lower:]]', w)
 
 def truecase(model, wordlist):
 	return [model[w.lower()].word if (w.lower() in model and (i == 0 or isUpper(w) or wordlist[i-1] in ".:;?!")) else w for i, w in enumerate(wordlist)]
