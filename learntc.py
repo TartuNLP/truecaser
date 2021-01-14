@@ -2,6 +2,7 @@
 
 import sys
 import re
+import regex
 
 from collections import defaultdict
 from operator import itemgetter
@@ -42,7 +43,7 @@ def compressModel(rawmodel):
 		sortedItems = sorted(rawmodel[key].items(), key=itemgetter(1), reverse=True)
 		totFreq = sum(rawmodel[key].values())
 		
-		if totFreq > 1 and re.search(r'[a-z]', key):
+		if totFreq > 1 and regex.search(r'[[:lower:]]', key):
 			if (len(sortedItems) > 1 and sortedItems[0][1] == sortedItems[1][1]):
 				winner = max(sortedItems[0][0], sortedItems[1][0])
 			else:
