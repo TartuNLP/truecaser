@@ -4,7 +4,7 @@ import sys
 import re
 import regex
 
-from truecaser.learntc import log, tokens
+from learntc import log, tokens
 
 class DefUniqDict(dict):
 	def __missing__(self, key):
